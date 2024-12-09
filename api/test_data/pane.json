@@ -1,0 +1,57 @@
+{
+  "eja": {
+    "datasource": "somesource",
+    "queries": [
+      {
+        "refId": "A",
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "someuid"
+        },
+        "editorType": "simplelog",
+        "rawSql": "SELECT Timestamp as \"timestamp\", Body as \"body\", SeverityText as \"level\" FROM \"views\".\"logs\" LIMIT 1000 --- cluster:prod AND service:foyle",
+        "builderOptions": {
+          "database": "views",
+          "table": "logs",
+          "queryType": "logs",
+          "mode": "list",
+          "columns": [
+            {
+              "name": "Timestamp",
+              "hint": "time"
+            },
+            {
+              "name": "SeverityText",
+              "hint": "log_level"
+            },
+            {
+              "name": "Body",
+              "hint": "log_message"
+            }
+          ],
+          "meta": {
+            "otelEnabled": false
+          },
+          "simplelogQuery": "cluster:prod AND service:foyle",
+          "limit": 1000
+        },
+        "pluginVersion": "4.5.0",
+        "format": 2,
+        "queryType": "logs"
+      }
+    ],
+    "range": {
+      "from": "now-5m",
+      "to": "now"
+    },
+    "panelsState": {
+      "logs": {
+        "columns": {
+          "0": "timestamp",
+          "1": "body"
+        },
+        "visualisationType": "logs"
+      }
+    }
+  }
+}

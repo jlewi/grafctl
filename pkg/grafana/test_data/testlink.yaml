@@ -1,0 +1,40 @@
+apiVersion: grafctl.foyle.io/v1alpha1
+kind: GrafanaLink
+metadata:
+  name: simplequery
+  labels: {}
+baseURL: https://grafana.acme.com
+panes:
+  eja:
+    datasource: SOMESOURCE
+    queries:
+      - refId: A
+        datasource:
+          type: grafana-bq
+          uid: SOMESOURCE
+        editorType: sql
+        rawSql: SELECT Timestamp as "timestamp", Body as "body", SeverityText as "level" FROM "views"."logs" LIMIT 1000 --- service:foyle
+        builderOptions:
+          database: views
+          table: logs
+          queryType: logs
+          mode: list
+          columns:
+            - name: Timestamp
+              hint: time
+            - name: SeverityText
+              hint: log_level
+            - name: Body
+              hint: log_message
+          limit: 1000
+          simplelogQuery: service:foyle
+        pluginVersion: 4.5.0
+        format: 2
+        queryType: logs
+    range:
+      from: "1733731200000"
+      to: "1733817599000"
+    panelsState:
+      logs:
+        visualisationType: logs
+
