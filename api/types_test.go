@@ -36,9 +36,10 @@ var expected = Panes{
 					SimplelogQuery: "cluster:prod AND service:foyle",
 					Limit:          1000,
 				},
-				PluginVersion: "4.5.0",
-				Format:        2,
-				QueryType:     "logs",
+				AdditionalFields: map[string]any{},
+				PluginVersion:    "4.5.0",
+				Format:           2,
+				QueryType:        "logs",
 			},
 		},
 		Range: TimeRange{
