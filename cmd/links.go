@@ -71,6 +71,9 @@ func NewExploreToURL() *cobra.Command {
 					return errors.Wrapf(err, "Error applying patch")
 				}
 				u, err := grafana.LinkToURL(*link)
+				if err != nil {
+					return err
+				}
 				fmt.Printf("Grafana URL:\n%v\n", u)
 				if open {
 					if err := browser.OpenURL(u); err != nil {
