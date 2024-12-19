@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/jlewi/goapp-template/cmd"
 	"os"
+
+	"github.com/jlewi/grafctl/cmd"
 )
 
 func main() {

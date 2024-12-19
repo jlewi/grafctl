@@ -3,27 +3,29 @@ package config
 import (
 	"encoding/json"
 	"fmt"
+	"io/fs"
+	"os"
+	"os/user"
+	"path/filepath"
+	"strings"
+
 	"github.com/go-logr/zapr"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"gopkg.in/yaml.v3"
-	"io/fs"
-	"os"
-	"os/user"
-	"path/filepath"
-	"strings"
 )
 
 // Note: The application uses viper for configuration management. Viper merges configurations from various sources
 //such as files, environment variables, and command line flags. After merging, viper unmarshals the configuration into the Configuration struct, which is then used throughout the application.
 
 const (
-	ConfigFlagName = "config"
-	LevelFlagName  = "level"
-	AppName        = "somegoapp"
-	ConfigDir      = "." + AppName
+	ConfigFlagName  = "config"
+	LevelFlagName   = "level"
+	AppName         = "grafctl"
+	ConfigDir       = "." + AppName
+	BaseURLFlagName = "base-url"
 )
 
 var (
@@ -46,13 +48,17 @@ type Config struct {
 	APIVersion string `json:"apiVersion" yaml:"apiVersion" yamltags:"required"`
 	Kind       string `json:"kind" yaml:"kind" yamltags:"required"`
 
-	Logging   Logging          `json:"logging" yaml:"logging"`
-	Telemetry *TelemetryConfig `json:"telemetry,omitempty" yaml:"telemetry,omitempty"`
+	Logging Logging `json:"logging" yaml:"logging"`
 
-	SomeOption string `json:"someOption,omitempty" yaml:"someOption,omitempty"`
-	
 	// configFile is the configuration file used
 	configFile string
+}
+
+type PaneTemplate struct {
+	// Name is the name of the template
+	Name string `json:"name" yaml:"name"`
+	// Path is the path to the template file
+	Path string `json:"path" yaml:"path"`
 }
 
 type Logging struct {
@@ -67,15 +73,6 @@ type LogSink struct {
 	// Path is the path to write logs to. Use "stderr" to write to stderr.
 	// Use gcplogs:///projects/${PROJECT}/logs/${LOGNAME} to write to Google Cloud Logging
 	Path string `json:"path,omitempty" yaml:"path,omitempty"`
-}
-
-type TelemetryConfig struct {
-	Honeycomb *HoneycombConfig `json:"honeycomb,omitempty" yaml:"honeycomb,omitempty"`
-}
-
-type HoneycombConfig struct {
-	// APIKeyFile is the Honeycomb API key
-	APIKeyFile string `json:"apiKeyFile" yaml:"apiKeyFile"`
 }
 
 func (c *Config) GetLogLevel() string {
@@ -108,19 +105,6 @@ func (c *Config) GetConfigDir() string {
 func (c *Config) IsValid() []string {
 	problems := make([]string, 0, 1)
 	return problems
-}
-
-func (c *Config) UseHoneycomb() bool {
-	if c.Telemetry == nil {
-		return false
-	}
-	if c.Telemetry.Honeycomb == nil {
-		return false
-	}
-	if c.Telemetry.Honeycomb.APIKeyFile == "" {
-		return false
-	}
-	return true
 }
 
 // DeepCopy returns a deep copy.
