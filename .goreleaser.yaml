@@ -8,9 +8,9 @@
 #     ./dist/foyle_darwin_arm64/hccli version
 #
 #     It should be something like 
-#     hccli 0.0.1-next, commit 416e3d5610d5bc21f9dcd82bd1f17c58a13457ca, built at 2024-04-06T23:39:07Z by goreleaser
+#     grafctl 0.0.1-next, commit 416e3d5610d5bc21f9dcd82bd1f17c58a13457ca, built at 2024-04-06T23:39:07Z by goreleaser
 builds:
-  - binary: hccli
+  - binary: grafctl
     main: .
     env:
       - CGO_ENABLED=0
